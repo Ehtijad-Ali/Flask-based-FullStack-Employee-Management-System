@@ -1,0 +1,40 @@
+body {
+  background: #f7f9fc;
+}
+
+.navbar-brand {
+  letter-spacing: 0.5px;
+}
+
+.card {
+  border: 1px solid #e7ebf0;
+  border-radius: 10px;
+}
+
+.table thead th {
+  white-space: nowrap;
+}
+
+.flash-container .alert {
+  margin-bottom: 12px;
+}
+
+.detail-item {
+  padding: 8px 0;
+  border-bottom: 1px dashed #eee;
+}
+.detail-item .label {
+  font-weight: 600;
+  color: #666;
+  display: inline-block;
+  min-width: 120px;
+}
+
+.badge {
+  font-weight: 500;
+}
+
+.form-label {
+  font-weight: 600;
+  color: #34495e;
+}

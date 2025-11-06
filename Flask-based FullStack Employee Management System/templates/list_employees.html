@@ -1,0 +1,112 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="card shadow-sm">
+  <div class="card-body">
+    <form class="row g-3 align-items-end mb-3" method="get">
+      <div class="col-md-4">
+        <label class="form-label">Search</label>
+        <input type="text" name="q" class="form-control" placeholder="Name, email, city, department" value="{{ q }}">
+      </div>
+      <div class="col-md-3">
+        <label class="form-label">Department</label>
+        <input type="text" name="department" class="form-control" placeholder="e.g. Sales" value="{{ department }}">
+      </div>
+      <div class="col-md-3">
+        <label class="form-label">Status</label>
+        <select name="status" class="form-select">
+          <option value="">Any</option>
+          <option value="Active" {{ "selected" if status=="Active" else "" }}>Active</option>
+          <option value="Inactive" {{ "selected" if status=="Inactive" else "" }}>Inactive</option>
+        </select>
+      </div>
+      <div class="col-md-2">
+        <label class="form-label">Per page</label>
+        <select name="per_page" class="form-select">
+          {% for n in [10,20,30,50] %}
+            <option value="{{ n }}" {{ "selected" if per_page==n else "" }}>{{ n }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="col-12">
+        <button class="btn btn-primary">Filter</button>
+        <a class="btn btn-outline-secondary" href="{{ url_for('index') }}">Reset</a>
+      </div>
+    </form>
+
+    <div class="d-flex justify-content-between align-items-center">
+      <div><strong>{{ total }}</strong> employees found</div>
+      <div>
+        Sort:
+        {% set sort_toggle = 'desc' if order_dir=='asc' else 'asc' %}
+        <a href="{{ url_for('index', q=q, department=department, status=status, per_page=per_page, sort='last_name', dir=sort_toggle if sort=='last_name' else 'asc') }}">Last Name</a> |
+        <a href="{{ url_for('index', q=q, department=department, status=status, per_page=per_page, sort='department', dir=sort_toggle if sort=='department' else 'asc') }}">Department</a> |
+        <a href="{{ url_for('index', q=q, department=department, status=status, per_page=per_page, sort='salary', dir=sort_toggle if sort=='salary' else 'asc') }}">Salary</a> |
+        <a href="{{ url_for('index', q=q, department=department, status=status, per_page=per_page, sort='hire_date', dir=sort_toggle if sort=='hire_date' else 'asc') }}">Hire Date</a>
+      </div>
+    </div>
+
+    <div class="table-responsive mt-3">
+      <table class="table table-hover align-middle">
+        <thead class="table-light">
+          <tr>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Department / Position</th>
+            <th>City</th>
+            <th class="text-end">Salary</th>
+            <th>Hire Date</th>
+            <th>Status</th>
+            <th class="text-end">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for e in employees %}
+          <tr>
+            <td>{{ e.first_name }} {{ e.last_name }}</td>
+            <td>{{ e.email }}</td>
+            <td>{{ e.department or "-" }}{% if e.position %} / {{ e.position }}{% endif %}</td>
+            <td>{{ e.city or "-" }}</td>
+            <td class="text-end">₹{{ "%.2f"|format(e.salary) }}</td>
+            <td>{{ e.hire_date or "-" }}</td>
+            <td>
+              {% if e.status == 'Active' %}
+                <span class="badge bg-success">Active</span>
+              {% else %}
+                <span class="badge bg-secondary">Inactive</span>
+              {% endif %}
+            </td>
+            <td class="text-end">
+              <a class="btn btn-sm btn-outline-primary" href="{{ url_for('view_employee', emp_id=e.id) }}">View</a>
+              <a class="btn btn-sm btn-outline-warning" href="{{ url_for('edit_employee', emp_id=e.id) }}">Edit</a>
+              <form id="del-{{ e.id }}" action="{{ url_for('delete_employee', emp_id=e.id) }}" method="post" class="d-inline">
+                <button type="button" class="btn btn-sm btn-outline-danger" onclick="confirmDelete('del-{{ e.id }}')">Delete</button>
+              </form>
+            </td>
+          </tr>
+          {% else %}
+          <tr><td colspan="8" class="text-center text-muted">No employees found.</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+
+    {% if pages > 1 %}
+    <nav aria-label="Pagination">
+      <ul class="pagination justify-content-center">
+        <li class="page-item {{ 'disabled' if page <= 1 else '' }}">
+          <a class="page-link" href="{{ url_for('index', q=q, department=department, status=status, per_page=per_page, sort=sort, dir=order_dir, page=page-1) }}">Previous</a>
+        </li>
+        {% for p in range(1, pages+1) %}
+          <li class="page-item {{ 'active' if p == page else '' }}">
+            <a class="page-link" href="{{ url_for('index', q=q, department=department, status=status, per_page=per_page, sort=sort, dir=order_dir, page=p) }}">{{ p }}</a>
+          </li>
+        {% endfor %}
+        <li class="page-item {{ 'disabled' if page >= pages else '' }}">
+          <a class="page-link" href="{{ url_for('index', q=q, department=department, status=status, per_page=per_page, sort=sort, dir=order_dir, page=page+1) }}">Next</a>
+        </li>
+      </ul>
+    </nav>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

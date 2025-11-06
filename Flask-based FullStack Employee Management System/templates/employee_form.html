@@ -1,0 +1,86 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="card shadow-sm">
+  <div class="card-body">
+    <h5 class="card-title mb-3">{{ "Add Employee" if mode=="create" else "Edit Employee" }}</h5>
+    <form method="post" class="row g-3">
+      <div class="col-md-6">
+        <label class="form-label">First Name *</label>
+        <input type="text" name="first_name" class="form-control" required value="{{ (employee.first_name if employee and employee.first_name is not none else employee.get('first_name')) if employee else '' }}">
+      </div>
+      <div class="col-md-6">
+        <label class="form-label">Last Name *</label>
+        <input type="text" name="last_name" class="form-control" required value="{{ (employee.last_name if employee and employee.last_name is not none else employee.get('last_name')) if employee else '' }}">
+      </div>
+
+      <div class="col-md-6">
+        <label class="form-label">Email *</label>
+        <input type="email" name="email" class="form-control" required value="{{ (employee.email if employee and employee.email is not none else employee.get('email')) if employee else '' }}">
+      </div>
+      <div class="col-md-6">
+        <label class="form-label">Phone</label>
+        <input type="text" name="phone" class="form-control" value="{{ (employee.phone if employee and employee.phone is not none else employee.get('phone')) if employee else '' }}">
+      </div>
+
+      <div class="col-md-4">
+        <label class="form-label">Gender</label>
+        {% set g = employee.gender if employee and employee.gender is not none else employee.get('gender') if employee else '' %}
+        <select name="gender" class="form-select">
+          <option value="">Select</option>
+          <option value="Male" {{ "selected" if g=="Male" else "" }}>Male</option>
+          <option value="Female" {{ "selected" if g=="Female" else "" }}>Female</option>
+          <option value="Other" {{ "selected" if g=="Other" else "" }}>Other</option>
+          <option value="Prefer not to say" {{ "selected" if g=="Prefer not to say" else "" }}>Prefer not to say</option>
+        </select>
+      </div>
+      <div class="col-md-4">
+        <label class="form-label">Date of Birth</label>
+        <input type="date" name="dob" class="form-control" value="{{ (employee.dob if employee and employee.dob is not none else employee.get('dob')) if employee else '' }}">
+      </div>
+      <div class="col-md-4">
+        <label class="form-label">Status</label>
+        {% set st = employee.status if employee and employee.status is not none else employee.get('status') if employee else 'Active' %}
+        <select name="status" class="form-select">
+          <option value="Active" {{ "selected" if st=="Active" else "" }}>Active</option>
+          <option value="Inactive" {{ "selected" if st=="Inactive" else "" }}>Inactive</option>
+        </select>
+      </div>
+
+      <div class="col-md-6">
+        <label class="form-label">Department</label>
+        <input type="text" name="department" class="form-control" value="{{ (employee.department if employee and employee.department is not none else employee.get('department')) if employee else '' }}">
+      </div>
+      <div class="col-md-6">
+        <label class="form-label">Position</label>
+        <input type="text" name="position" class="form-control" value="{{ (employee.position if employee and employee.position is not none else employee.get('position')) if employee else '' }}">
+      </div>
+
+      <div class="col-md-6">
+        <label class="form-label">Hire Date</label>
+        <input type="date" name="hire_date" class="form-control" value="{{ (employee.hire_date if employee and employee.hire_date is not none else employee.get('hire_date')) if employee else '' }}">
+      </div>
+      <div class="col-md-6">
+        <label class="form-label">Salary (₹) *</label>
+        <input type="number" name="salary" class="form-control" step="0.01" min="0" required value="{{ (employee.salary if employee and employee.salary is not none else employee.get('salary')) if employee else '' }}">
+      </div>
+
+      <div class="col-md-6">
+        <label class="form-label">City</label>
+        <input type="text" name="city" class="form-control" value="{{ (employee.city if employee and employee.city is not none else employee.get('city')) if employee else '' }}">
+      </div>
+      <div class="col-md-6">
+        <label class="form-label">Address</label>
+        <input type="text" name="address" class="form-control" value="{{ (employee.address if employee and employee.address is not none else employee.get('address')) if employee else '' }}">
+      </div>
+
+      <div class="col-12 d-flex gap-2">
+        <button class="btn btn-primary">{{ "Add Employee" if mode=="create" else "Save Changes" }}</button>
+        <a class="btn btn-outline-secondary" href="{{ url_for('index') }}">Cancel</a>
+        {% if mode == "edit" %}
+          <a class="btn btn-outline-info" href="{{ url_for('view_employee', emp_id=emp_id) }}">View</a>
+        {% endif %}
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="card shadow-sm">
+  <div class="card-body">
+    <div class="d-flex justify-content-between align-items-start">
+      <h5 class="card-title mb-3">{{ employee.first_name }} {{ employee.last_name }}</h5>
+      <div>
+        <a class="btn btn-sm btn-outline-warning" href="{{ url_for('edit_employee', emp_id=employee.id) }}">Edit</a>
+        <a class="btn btn-sm btn-outline-secondary" href="{{ url_for('index') }}">Back</a>
+      </div>
+    </div>
+
+    <div class="row g-3">
+      <div class="col-md-6">
+        <div class="detail-item"><span class="label">Email:</span> {{ employee.email }}</div>
+        <div class="detail-item"><span class="label">Phone:</span> {{ employee.phone or "-" }}</div>
+        <div class="detail-item"><span class="label">Gender:</span> {{ employee.gender or "-" }}</div>
+        <div class="detail-item"><span class="label">DOB:</span> {{ employee.dob or "-" }}</div>
+        <div class="detail-item"><span class="label">Status:</span>
+          {% if employee.status == 'Active' %}
+            <span class="badge bg-success">Active</span>
+          {% else %}
+            <span class="badge bg-secondary">Inactive</span>
+          {% endif %}
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="detail-item"><span class="label">Department:</span> {{ employee.department or "-" }}</div>
+        <div class="detail-item"><span class="label">Position:</span> {{ employee.position or "-" }}</div>
+        <div class="detail-item"><span class="label">Hire Date:</span> {{ employee.hire_date or "-" }}</div>
+        <div class="detail-item"><span class="label">Salary:</span> ₹{{ "%.2f"|format(employee.salary) }}</div>
+        <div class="detail-item"><span class="label">City:</span> {{ employee.city or "-" }}</div>
+        <div class="detail-item"><span class="label">Address:</span> {{ employee.address or "-" }}</div>
+      </div>
+    </div>
+
+    <hr>
+    <small class="text-muted">Created: {{ employee.created_at }} | Updated: {{ employee.updated_at }}</small>
+  </div>
+</div>
+{% endblock %}
